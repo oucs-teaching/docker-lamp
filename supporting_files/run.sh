@@ -24,6 +24,7 @@ function replace_apache_php_ini_values () {
 
     sed -i "s/;date.timezone =/date.timezone = Europe\/London/g" /etc/php/$1/apache2/php.ini
 
+    sed -i "s/^display_errors = Off/display_errors = On/" /etc/php/$1/apache2/php.ini
 }
 if [ -e /etc/php/5.6/apache2/php.ini ]; then replace_apache_php_ini_values "5.6"; fi
 if [ -e /etc/php/$PHP_VERSION/apache2/php.ini ]; then replace_apache_php_ini_values $PHP_VERSION; fi
