@@ -64,10 +64,14 @@ RUN php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" &&
 ENV MYSQL_PASS:-$(pwgen -s 12 1)
 # config to enable .htaccess
 ADD supporting_files/apache_default /etc/apache2/sites-available/000-default.conf
-RUN a2enmod rewrite
+ADD supporting_files/test-site.conf /etc/apache2/sites-available/test-site.conf
+# Apache modules
+RUN a2enmod rewrite && a2enmod cgi
 
 # Configure /app folder with sample app
-RUN mkdir -p /app && rm -fr /var/www/html && ln -s /app /var/www/html
+RUN \
+    mkdir -p /app && rm -fr /var/www/html && ln -s /app /var/www/html && \
+    mkdir -p /test && ln -s /test /var/www/test
 ADD app/ /app
 
 #Environment variables to configure php
@@ -76,7 +80,7 @@ ENV PHP_POST_MAX_SIZE 10M
 ENV PHP_VERSION 7.4
 
 # Add volumes for the app and MySql
-VOLUME  ["/var/lib/mysql", "/app" ]
+VOLUME  ["/var/lib/mysql", "/app", "/test" ]
 
 EXPOSE 80 3306
 CMD ["/run.sh"]
