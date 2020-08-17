@@ -65,8 +65,8 @@ ENV MYSQL_PASS:-$(pwgen -s 12 1)
 # config to enable .htaccess
 ADD supporting_files/apache_default /etc/apache2/sites-available/000-default.conf
 ADD supporting_files/test-site.conf /etc/apache2/sites-available/test-site.conf
-# Apache modules
-RUN a2enmod rewrite && a2enmod cgi
+# Enable Apache modules and sites
+RUN a2enmod rewrite && a2enmod cgi && a2ensite test-site.conf
 
 # Configure /app folder with sample app
 RUN \
