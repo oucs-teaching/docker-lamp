@@ -47,7 +47,7 @@ if [ -e /etc/php/$PHP_VERSION/cli/php.ini ]; then replace_cli_php_ini_values $PH
 sed -i "s/export APACHE_RUN_GROUP=www-data/export APACHE_RUN_GROUP=staff/" /etc/apache2/envvars
 
 # expose additional Apache port
-if [ -e /etc/apache2/ports.conf ]; then sed -i -e '/Listen 80/ a Listen 8080' /etc/apache2/ports.conf; fi
+if [ -e /etc/apache2/ports.conf ]; then grep -q 'Listen 8080' /etc/apache2/ports.conf || sed -i -e '/Listen 80/ a Listen 8080' /etc/apache2/ports.conf; fi
 
 if [ -n "$APACHE_ROOT" ];then
     rm -f /var/www/html && ln -s "/app/${APACHE_ROOT}" /var/www/html
